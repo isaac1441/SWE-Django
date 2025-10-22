@@ -1,0 +1,33 @@
+{% extends 'app/base.html' %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/home-style.css' %}">
+{% endblock %}
+
+{% block title %}All  ̶C̶l̶o̶t̶h̶i̶n̶g̶ Animals {% endblock %}
+
+{% block content %}
+    <h1>All Clothing Items</h1>
+    <div class="wrapper">
+        <!--error message--->
+        {% include "app/error.html"%}
+        
+        
+        <!--display products--->
+        {% for item in items %}
+            <div class="item-box">
+                <div class="item-card">
+                    <h2>{{ item.name }}</h2>
+                    {% if item.image %}
+                        <img src="{{ item.image.url }}" alt="{{ item.name }}" style="max-height: 25vh;max-width: 15vw;">
+                    {% else %}
+                        <img alt="No image available" style="max-height: 200px;">
+                    {% endif %}
+                </div>
+                <div class="card-info">
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

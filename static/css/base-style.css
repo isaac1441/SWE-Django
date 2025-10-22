@@ -1,0 +1,13 @@
+
+body {
+    font-family: sans-serif;
+    margin: 20px;
+    background-color: #683ce26b;   
+}
+
+.wrapper{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2.5vw
+}
+

@@ -1,0 +1,30 @@
+
+.item-box{
+    background-color: rgba(127, 255, 212, 0.411);
+    display: flex;
+    justify-content: center;
+    width: 40vw;
+    gap: 2.5vw;
+    box-shadow: .1vw .2vw .9vw .1vw #000000;
+}
+.item-card{
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 15vw
+}
+.item-info{
+    display: flex;
+    flex-wrap: wrap;
+    width: 25vw;
+    gap: 1vw;
+}
+
+.error-message{
+    background-color: rgb(68, 38, 38);
+    width: 7vw;
+    height: 7vh;
+    color: bisque;
+}
+

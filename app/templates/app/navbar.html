@@ -1,0 +1,20 @@
+<nav>
+        <a href="{% url 'home' %}">Home</a>
+        <a href="{% url 'account' %}">account</a>
+        <a href="{% url 'admin:index' %}">admin</a>
+        <a class="accounts">
+            <form action="{% url 'signup-button'%}" method="post">
+                {% csrf_token %}
+                <button > Sign up</button>
+            </form>
+            <form action="{% url 'login'%}" method="post">
+                {% csrf_token %}
+                <button> Log in</button>
+            </form>
+            <form action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <button type="submit">Logout</button>
+            </form>
+        </a>
+
+</nav>
