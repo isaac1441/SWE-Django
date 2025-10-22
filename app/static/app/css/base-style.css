@@ -1,0 +1,13 @@
+
+body {
+    font-family: sans-serif;
+    margin: 4vh;
+    background-color: #c9c9ca6b;   
+}
+
+.wrapper{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2.5vw
+}
+

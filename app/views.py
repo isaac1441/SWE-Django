@@ -29,17 +29,10 @@ def account_view(request):
     user = request.user
     return render(request, 'app/account.html', {'account': user})
 
-def signup_button_view(request):
-    user = request.user
-    print("test")
-    if user.is_authenticated:
-        return render(request, "app/index.html", {
-            "message": "You're already logged in"})
-    form = SignUpForm()
-    return render(request, "app/signup.html", {'form': form})
-
 def signup_view(request):
-    print("SIGNUP_VIEW reached")
+    if request.user.is_authenticated:
+            return render(request, "app/index.html", {
+                "message": "You're already logged in"})
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
