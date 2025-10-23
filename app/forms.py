@@ -1,4 +1,5 @@
 from django import forms
+from .models import Post
 from django.contrib.auth.models import User
 
 class SignUpForm(forms.Form):
@@ -32,4 +33,8 @@ class LogInForm(forms.Form):
     identifier = forms.CharField(max_length=50, label='Username or Email')
     password = forms.CharField(max_length=128, widget=forms.PasswordInput)
 
-    
+class PostForm(forms.ModelForm):
+    class Meta:
+        model = Post
+
+        fields =['title', 'body']

@@ -1,1 +1,0 @@
-const sign_up = document.getElementById();

@@ -1,14 +1,23 @@
-nav{
-    margin-right: 10px;
+nav {
     display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
     width: 100%;
     height: 3vh;
-    gap: .75vw
+    
+    padding-left: 10px;
+    padding-right:15px;
+    box-sizing: border-box; 
 }
 
-.accounts{
-    margin-left: 70%;
+
+.nav-links {
     display: flex;
-    gap: 1vw
+    gap: .75vw; 
 }
 
+.accounts {
+    display: flex;
+    gap: 1vw;
+}

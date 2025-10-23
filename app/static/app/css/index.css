@@ -1,0 +1,58 @@
+.fixed-navbar-container {
+    position: fixed;
+    top: 0px;
+    left: 0;
+    height:6.7vh;
+    width: 100%;
+    z-index: 1000;
+    box-sizing: border-box;
+    background-color: rgb(188, 221, 71);
+    
+}
+
+
+.sidebar-left {
+    position: fixed;
+    left: 0;
+    width: 300px;
+    height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+    z-index: 900;
+    
+}
+
+
+.scrolling-content {
+margin-left: 300px;
+}
+
+.banner {
+ 
+    background-color: rgba(218, 167, 167, 0.551);
+    height: 25vh;
+    width: 100%; 
+}
+
+
+.post-form p { margin: 0; }
+.post-form input[type="text"],
+.post-form textarea{
+    resize:none;
+    width: 240px;
+}
+.post-form button {
+    width: 246px;
+    margin-bottom: 10px;
+}
+
+.post-card {
+    background-color: #ffffff;
+    border: 1px solid #e1e1e1;
+    border-radius: 8px;
+    padding:10px;
+    margin-bottom: 20px;
+    margin-top: 10px; 
+    width: 600px; 
+  
+}

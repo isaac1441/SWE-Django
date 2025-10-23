@@ -1,22 +1,24 @@
 <nav>
+    <div class="nav-links">
         <a href="{% url 'home' %}">Home</a>
         <a href="{% url 'admin:index' %}">admin</a>
-        <a class="accounts">
-            {% if not user.is_authenticated%}
-            <form action="{% url 'signup'%}" method="post">
+    </div>
+
+    <div class="accounts">
+        {% if not user.is_authenticated %}
+            <form action="{% url 'signup' %}" method="post">
                 {% csrf_token %}
-                <button > Sign up</button>
+                <button>Sign up</button>
             </form>
-            <form action="{% url 'login'%}" method="post">
+            <form action="{% url 'login' %}" method="post">
                 {% csrf_token %}
-                <button> Log in</button>
+                <button>Log in</button>
             </form>
-            {% else%}
+        {% else %}
             <form action="{% url 'logout' %}" method="post">
                 {% csrf_token %}
                 <button type="submit">Logout</button>
             </form>
-            {% endif %}
-        </a>
-
+        {% endif %}
+    </div>
 </nav>
