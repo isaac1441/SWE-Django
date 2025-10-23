@@ -1,3 +1,8 @@
+.wrapper{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2.5vw
+}
 
 .item-box{
     background-color: rgba(127, 255, 212, 0.411);
@@ -26,5 +31,10 @@
     width: 7vw;
     height: 7vh;
     color: bisque;
+}
+.banner{
+    height: 30vh;
+    width: 100%;
+    background-color: rgb(218, 167, 167);
 }
 

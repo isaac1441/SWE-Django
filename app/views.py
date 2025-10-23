@@ -19,11 +19,10 @@ from django.db import connection
 # Create your views here.
 
 def index(request):
-    print("Connected to DB:", connection.settings_dict['NAME'])
     # items = Post.objects.all()
     users = User.objects.all()
     context = {'items': users}
-    return render(request, "app/index.html", context)
+    return render(request, "app/home.html", context)
 
 def account_view(request):
     user = request.user
@@ -47,7 +46,7 @@ def signup_view(request):
     
     return render(request, "app/signup.html", {'form': form})
         
-def login_view(request):
+def login_view(request): 
     if request.method == 'POST':
         form = LogInForm(request.POST)
         if form.is_valid():

@@ -1,0 +1,25 @@
+{% extends 'app/base.html' %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" type="text/css" href="{% static 'app/css/home-style.css' %}">
+{% endblock %}
+
+{% block title %}Title{% endblock %}
+
+{% block content %}
+    <div class="banner"></div>
+    <div class="wrapper">
+        <!--error message--->
+        {% include "app/error.html"%}
+        <div>
+            {% for post in posts %}
+            <div> 
+                <h3>{{post.title}}</h3>
+                <p>{{post.author}}</p>
+                <p>{{post.body}}</p>
+            </div>
+            {%endfor%}
+        </div>
+    </div>
+{% endblock %}
