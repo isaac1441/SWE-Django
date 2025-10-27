@@ -1,3 +1,53 @@
+.fixed-navbar-container a {
+
+    display: inline-block; 
+    padding: 8px 15px;     
+    margin: 0 10px;         
+    border: 2px solid white; 
+    border-radius: 5px;    
+
+
+    color: white;      
+    text-decoration: none; 
+    font-weight: bold;
+    transition: all 0.3s ease; 
+}
+
+.fixed-navbar-container a:hover {
+    background-color: white; 
+    color: #bcdd47;          
+}
+
+.fixed-navbar-container button[type="submit"] {
+    display: inline-block;
+    padding: 8px 15px;      
+    margin: 0 10px;         
+    border: 2px solid white; 
+    border-radius: 5px;     
+    background-color: transparent; 
+    color: white;           
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease; 
+}
+
+
+.fixed-navbar-container button[type="submit"]:hover {
+    background-color: white; 
+    color: #bcdd47; 
+    border-color: white;
+}
+
+.fixed-navbar-container form {
+    margin: 0;
+    padding: 0;
+    display: inline; 
+}
+.fixed-navbar-container {
+    display: flex; 
+    align-items: center;
+    justify-content: flex-end; 
+}
 .fixed-navbar-container {
     position: fixed;
     top: 0px;
@@ -6,30 +56,55 @@
     width: 100%;
     z-index: 1000;
     box-sizing: border-box;
-    background-color: rgb(188, 221, 71);
+    background-color: rgb(92, 40, 114);
     
 }
 
 
 .sidebar-left {
     position: fixed;
+    top:6.7vh;
     left: 0;
     width: 300px;
-    height: 100vh;
+    height: calc(100vh - 6.7vh);
     padding: 20px;
     box-sizing: border-box;
     z-index: 900;
-    
+    overflow: y-auto;
 }
 
 
 .scrolling-content {
 margin-left: 300px;
+margin-top: 6.7vh;
+min-height: calc(100vh-6.7vh);
+width:100%;
+}
+
+.post-card .delete-form {
+    display: block;
+    text-align: right;
+    margin-top: 5px;
+}
+
+.delete-button {
+    background-color: rgb(255, 255, 255); 
+    color: rgb(0, 0, 0); 
+    border: 2px black solid;
+    padding: 5px 10px;
+    border-radius: 20px; 
+    cursor: pointer;
+    font-weight: bold;
+    
+}
+
+.delete-button:hover {
+    background-color: darkred;
+    color: white;
 }
 
 .banner {
- 
-    background-color: rgba(218, 167, 167, 0.551);
+    background-color: rgb(163, 106, 188);
     height: 25vh;
     width: 100%; 
 }

@@ -1,7 +1,7 @@
 <nav>
     <div class="nav-links">
         <a href="{% url 'home' %}">Home</a>
-        <a href="{% url 'admin:index' %}">admin</a>
+        <a href="{% url 'admin:index' %}">Admin</a>
     </div>
 
     <div class="accounts">
@@ -15,7 +15,7 @@
                 <button>Log in</button>
             </form>
         {% else %}
-            <form action="{% url 'logout' %}" method="post">
+            <form action="{% url 'logout' %}"class="nav-link" method="post">
                 {% csrf_token %}
                 <button type="submit">Logout</button>
             </form>

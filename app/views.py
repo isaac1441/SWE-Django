@@ -1,21 +1,19 @@
-from django.shortcuts import render
-from django.http import HttpResponse
-from django.http import Http404
-from .models import Post
-from django.contrib.auth import get_user_model
-User = get_user_model()
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponse, HttpResponseNotAllowed, Http404
 from django.urls import reverse
-from django.views import generic
-from django.contrib.auth.views import LoginView
-from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login, logout
-from django.db.models import F
-from django.shortcuts import get_object_or_404, render
-from django.shortcuts import redirect
-from .forms import SignUpForm, LogInForm, PostForm
-from django.contrib.auth.decorators import login_required
-# from .models import 
 from django.db import connection
+
+from django.contrib.auth import authenticate, login, logout, get_user_model
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import LoginView
+from django.contrib import messages
+
+
+from .models import Post
+from .forms import SignUpForm, LogInForm, PostForm
+
+User = get_user_model()
+
 
 # Create your views here.
 
@@ -33,6 +31,7 @@ def index(request):
         'form': form         # Pass the form to the template
     }
     return render(request, "app/index.html", context)
+
 @login_required
 def add_post_view(request):
     if request.method == 'POST':
@@ -47,6 +46,24 @@ def add_post_view(request):
 
             return redirect('home')
     return redirect('home')
+
+@login_required
+def delete_post_view(request,pk):
+    if request.method != 'POST':
+        return HttpResponseNotAllowed(['POST'])
+    
+    post = get_object_or_404(Post, pk=pk)
+
+    if post.author != request.user:
+        messages.error(request, "You are not authorized to delete this post")
+        return redirect('home')
+    
+        
+    post.delete()
+    messages.success(request, "Post deleted successfully")
+       
+    return redirect('home')
+
 
 def account_view(request):
     user = request.user

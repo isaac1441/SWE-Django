@@ -30,6 +30,13 @@
                     <h4>{{ item.title }}</h4>
                     <p>{{ item.body }}</p>
                     <small>by {{ item.author.username }}</small>
+
+                    {%if item.author == user%}
+                        <form method = 'POST' action="{% url 'delete_post' item.pk %}" class ="delete-form">
+                            {% csrf_token %}
+                            <button type="submit" class="delete-button">Delete Post</button>
+                        </form>
+                    {% endif %}
                 </div>
             {% endfor %}
         </div> 

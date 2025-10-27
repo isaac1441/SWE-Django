@@ -6,13 +6,15 @@ urlpatterns = [
     path("", views.index, name="home"), 
     path("home/", views.index, name="home"), 
     
-    # account urls
+    # account urls   
     path("signup/", views.signup_view, name="signup"),
     path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'),
     path("account/", views.account_view, name="account"),
     path("account/<slug:username>/", views.account_view, name="account"),
-    path("add_post/", views.add_post_view, name="add_post")
+    path("add_post/", views.add_post_view, name="add_post"),
+    path("post/<int:pk>/delete/", views.delete_post_view, name="delete_post")
+
     # 
     # path("cart/", views.cart_view, name="cart"),
     # path("product/<slug:product_slug>/",views.product_page, name="product_page"),
