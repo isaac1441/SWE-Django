@@ -2,11 +2,11 @@
 {% load static %}
 
 {% block head %}
-<link rel="stylesheet" type="text/css" href="{% static 'app/css/home-style.css' %}">
-<link rel="stylesheet" type="text/css" href="{% static 'app/css/index.css' %}">
-{% endblock %}
+    <link rel="stylesheet" type="text/css" href="{% static 'app/css/index.css' %}">
+    
+    {% endblock %}
 
-{% block title %}Title{% endblock %}
+{% block title %}NodeLink{% endblock %}
 
 {% block content %}
     <aside class="sidebar-left">
@@ -17,7 +17,7 @@
         </form>
     </aside>
 
-    <main class="scrolling-content">
+    <div class="scrolling-content">
         <div class="banner"></div>
         <div class="post-feed-area">
             {% for item in items %}
@@ -35,12 +35,7 @@
                 </div>
             {% endfor %}
         </div> 
-    </main>
+    </div>
 
-    <script src="{% static 'app/js/home.js' %}"></script>
 
 {% endblock %}
-
-
-</body>
-</html>

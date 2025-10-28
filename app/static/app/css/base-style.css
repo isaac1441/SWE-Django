@@ -1,48 +1,13 @@
 
 body {
     font-family: sans-serif;
-    margin: 4vh;
+    margin: 0;
     background-color: #c9c9ca6b;   
+    height:100%;
+    width:100%;
 }
-
-.fixed-navbar-container a {
-
-    display: inline-block; 
-    padding: 8px 15px;     
-    margin: 0 10px;         
-    border: 2px solid white; 
-    border-radius: 5px;    
-
-
-    color: white;      
-    text-decoration: none; 
-    font-weight: bold;
-    transition: all 0.3s ease; 
-}
-
-.fixed-navbar-container a:hover {
-    background-color: white; 
-    color: #bcdd47;          
-}
-
-.fixed-navbar-container button[type="submit"] {
-    display: inline-block;
-    padding: 8px 15px;      
-    margin: 0 10px;         
-    border: 2px solid white; 
-    border-radius: 5px;     
-    background-color: transparent; 
-    color: white;           
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease; 
-}
-
-
-.fixed-navbar-container button[type="submit"]:hover {
-    background-color: white; 
-    color: #bcdd47; 
-    border-color: white;
+html{
+    height:100%
 }
 
 .fixed-navbar-container form {
@@ -50,19 +15,46 @@ body {
     padding: 0;
     display: inline; 
 }
+
 .fixed-navbar-container {
     display: flex; 
     align-items: center;
     justify-content: flex-end; 
-}
-.fixed-navbar-container {
     position: fixed;
     top: 0px;
     left: 0;
-    height:6.7vh;
+    height: 6.7vh;
     width: 100%;
     z-index: 1000;
     box-sizing: border-box;
     background-color: rgb(92, 40, 114);
+}
+
+.nav-item {
+    display: inline-block;
+    padding: 8px 15px;
+    margin: 0 10px;
+    border: 2px solid white;
+    border-radius: 5px;
     
+    background-color: transparent;
+    color: rgb(255, 255, 255);
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    font-size: 1em;
+    font-family: sans-serif;
+}
+
+.nav-item:hover {
+    background-color: white;
+    color: rgb(92, 40, 114);
+}
+
+.main-content-area {
+    flex-grow: 1;
+    overflow-y: hidden;
+    display: flex;
+    margin-top: 6.7vh;
 }

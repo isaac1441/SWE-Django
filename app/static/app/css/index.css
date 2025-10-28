@@ -1,22 +1,18 @@
-
+/*app/static/app/css/index.css*/
 .sidebar-left {
-    position: fixed;
-    top:6.7vh;
-    left: 0;
-    width: 300px;
-    height: calc(100vh - 6.7vh);
+    width: 300px;   
+    flex-shrink: 0;     
+    background: #f4f4f4;  
+    overflow-y: auto; 
+    height: calc(100vh - 6.7vh); 
     padding: 20px;
     box-sizing: border-box;
-    z-index: 900;
-    overflow: y-auto;
 }
 
-
 .scrolling-content {
-margin-left: 300px;
-margin-top: 6.7vh;
-min-height: calc(100vh-6.7vh);
-width:100%;
+    flex-grow: 1;
+    overflow-y: auto;
+    height: calc(100vh - 6.7vh); 
 }
 
 .post-card .delete-form {

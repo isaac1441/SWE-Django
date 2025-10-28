@@ -1,9 +1,10 @@
-<!-- clothes/templates/clothes/base.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}My Shop{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>{% block title %}Friend {% endblock %}</title>
     {% block head %}
 
     {% endblock %}
@@ -16,9 +17,12 @@
     <div class="fixed-navbar-container">
         {% include "app/navbar.html" %}
     </div>
-    {% block content %}
-    
-    {% endblock %}
+
+    <main class="main-content-area">
+        {% block content %}
+        
+        {% endblock %}
+    </main>
 
 </body>
 </html>
