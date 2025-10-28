@@ -11,7 +11,6 @@ nav {
     box-sizing: border-box; 
 }
 
-
 .nav-links {
     display: flex;
     gap: .75vw; 

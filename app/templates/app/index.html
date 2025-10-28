@@ -9,11 +9,6 @@
 {% block title %}Title{% endblock %}
 
 {% block content %}
-
-    <div class="fixed-navbar-container">
-        {% include "app/navbar.html" %}
-    </div>
-
     <aside class="sidebar-left">
         <form action="{% url 'add_post' %}" method="POST" class="post-form">
             {% csrf_token %}
@@ -29,7 +24,7 @@
                 <div class="post-card">
                     <h4>{{ item.title }}</h4>
                     <p>{{ item.body }}</p>
-                    <small>by {{ item.author.username }}</small>
+                    <a href='profile.html' style="font-size: small;">by {{ item.author.username }}</a>
 
                     {%if item.author == user%}
                         <form method = 'POST' action="{% url 'delete_post' item.pk %}" class ="delete-form">
