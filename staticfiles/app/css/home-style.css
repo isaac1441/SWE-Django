@@ -1,0 +1,34 @@
+.item-box {
+    background-color: rgba(127, 255, 212, 0.411);
+    display: flex;
+    /* justify-content: center; <-- Not needed if children fill width */
+    width: 40vw; /* Keep the parent at 40vw */
+    gap: 2.5vw;
+    box-shadow: .1vw .2vw .9vw .1vw #000000;
+}
+.item-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    
+    /* Let this item shrink but not grow */
+    flex: 0 1 15vw; 
+}
+.item-info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1vw;
+
+    /* Let this item grow and shrink */
+    flex: 1 1 25vw;
+}
+
+.error-message {
+    background-color: rgb(68, 38, 38);
+    color: bisque;
+    
+    /* This is much safer */
+    padding: 10px 15px;
+    border-radius: 5px;
+}

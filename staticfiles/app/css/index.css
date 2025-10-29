@@ -1,0 +1,67 @@
+/*app/static/app/css/index.css*/
+.sidebar-left {
+    width: 300px;   
+    flex-shrink: 0;     
+    background: #f4f4f4;  
+    overflow-y: auto; 
+    height: calc(100vh - 6.7vh); 
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.scrolling-content {
+    flex-grow: 1;
+    overflow-y: auto;
+    height: calc(100vh - 6.7vh); 
+}
+
+.post-card .delete-form {
+    display: block;
+    text-align: right;
+    margin-top: 5px;
+}
+
+.delete-button {
+    background-color: rgb(255, 255, 255); 
+    color: rgb(0, 0, 0); 
+    border: 2px black solid;
+    padding: 5px 10px;
+    border-radius: 20px; 
+    cursor: pointer;
+    font-weight: bold;
+    
+}
+
+.delete-button:hover {
+    background-color: darkred;
+    color: white;
+}
+
+.banner {
+    background-color: rgb(163, 106, 188);
+    height: 25vh;
+    width: 100%; 
+}
+
+
+.post-form p { margin: 0; }
+.post-form input[type="text"],
+.post-form textarea{
+    resize:none;
+    width: 240px;
+}
+.post-form button {
+    width: 246px;
+    margin-bottom: 10px;
+}
+
+.post-card {
+    background-color: #ffffff;
+    border: 1px solid #e1e1e1;
+    border-radius: 8px;
+    padding:10px;
+    margin-bottom: 20px;
+    margin-top: 10px; 
+    width: 600px; 
+  
+}

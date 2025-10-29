@@ -3,7 +3,8 @@
 
 <nav>
     <div class="nav-links">
-        <a class="nav-item" href="{% url 'home' %}">Home</a>
+
+        <a class="nav-logo" href="{% url 'home' %}"><img src="{%static 'app/images/NodeLinkBlack.png' %}"alt="NodeLink Logo" class="navbar-logo"></a>
         <a class="nav-item" href="{% url 'admin:index' %}">Admin</a>
     </div>
 
@@ -26,3 +27,4 @@
         {% endif %}
     </div>
 </nav>
+

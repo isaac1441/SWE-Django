@@ -1,14 +1,16 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <title>{% block title %}Friend {% endblock %}</title>
-    {% block head %}
+    <title>{% block title %} NodeLink {% endblock %}</title>
 
+    <link rel="icon" type="image/x-icon" href="{% static 'app/images/NodeLinkPurp.ico' %}?v=2" />
+    {% block head %}
     {% endblock %}
-    {% load static %}
+
     <link rel="stylesheet" type="text/css" href="{% static 'app/css/base-style.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'app/css/navbar.css' %}">
 

@@ -3,20 +3,16 @@ nav {
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    padding-left: 32px;
-    padding-right:32px;
+    padding-left: 25px;
+    padding-right:15px;
     box-sizing: border-box; 
 }
-.navbar-logo{
-    height:48px;
-    width:auto;
-}
+
 .nav-links {
     display: flex;
     gap: .75vw; 
     align-items: center;
 }
-
 
 .accounts {
     display: flex;
