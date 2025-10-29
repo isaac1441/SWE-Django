@@ -19,7 +19,6 @@ User = get_user_model()
 # Create your views here.
 
 def index(request):
-    print("Connected to DB:", connection.settings_dict['NAME'])
     ### 1. Get all the posts (newest first)
     all_posts = Post.objects.all().order_by('-id') # Assumes you have a 'created_at' field
     
@@ -93,10 +92,26 @@ def delete_post_view(request,pk):
        
     return redirect('home')
 
+@login_required
+def my_profile_redirect(request):
+    return redirect("profile", username=request.user.username)
 
-def account_view(request):
-    user = request.user
-    return render(request, 'app/account.html', {'account': user})
+def profile_view(request, username):
+    
+    if username == request.user.username:
+        # The user is viewing their own profile
+        profile_user = request.user
+        is_own_profile = True
+    else:
+        profile_user = get_object_or_404(User, username=username)
+        is_own_profile = False
+
+    context = {
+        "profile_user": profile_user,
+        "is_own_profile": is_own_profile,
+    }
+    return render(request, "app/profile.html", context)
+
 
 def signup_view(request):
     if request.user.is_authenticated:
@@ -143,7 +158,8 @@ def login_view(request):
 
 def logout_view(request):
     logout(request)
-    return redirect('home')
+    next_url = request.META.get('HTTP_REFERER', 'home')
+    return redirect(next_url)
 
 # def cart_view(request, cart):
 #     return render(request, 'app/cart.html', {'cart': cart})

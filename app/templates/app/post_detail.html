@@ -1,7 +1,3 @@
-
-
-
-
 {% extends "app/base.html" %}
 
 {% block content %}
@@ -50,7 +46,7 @@
             <button type="submit">Post</button>
         </form>
     {% else %}
-        <p><a href="{% url 'login' %}">Log in</a> to comment.</p>
+        <p><a href="{% url 'signup' %}">Sign up</a> or <a href="{% url 'login' %}"> Log in</a>  to comment.</p>
     {% endif %}
 </section>
 

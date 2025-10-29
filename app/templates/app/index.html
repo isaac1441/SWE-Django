@@ -26,7 +26,7 @@
                     <h4>{{ item.title }}</h4>
                     </a>
                     <p>{{ item.body }}</p>
-                    <a href='profile.html' style="font-size: small;">by {{ item.author.username }}</a>
+                    <a href="{% url 'profile' username=item.author.username%}" style="font-size: small;">by {{ item.author.username }}</a>
 
                     {%if item.author == user%}
                         <form method = 'POST' action="{% url 'delete_post' item.pk %}" class ="delete-form">
