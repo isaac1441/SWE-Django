@@ -1,0 +1,16 @@
+services:
+  db:
+    image: postgres:16
+    container_name: swe_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: swe_user
+      POSTGRES_PASSWORD: swe_pass
+      POSTGRES_DB: swe_local_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:

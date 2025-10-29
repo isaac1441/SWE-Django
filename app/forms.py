@@ -1,5 +1,5 @@
 from django import forms
-from .models import Post
+from .models import Post, Comment
 from django.contrib.auth.models import User
 
 class SignUpForm(forms.Form):
@@ -38,3 +38,19 @@ class PostForm(forms.ModelForm):
         model = Post
 
         fields =['title', 'body']
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['body']
+        labels = {
+            'body': ''
+        }
+        widgets = {
+            'body': forms.Textarea(
+                attrs={
+                    'rows': 3,
+                    'placeholder': 'Add a comment...'
+                }
+            )
+        }

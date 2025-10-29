@@ -1,0 +1,57 @@
+
+
+
+
+{% extends "app/base.html" %}
+
+{% block content %}
+
+<div class="post-card">
+    <h2>{{ post.title }}</h2>
+
+    <p>{{ post.body }}</p>
+
+    {% if post.author %}
+    <p><strong>Posted by:</strong> {{ post.author.username }}</p>
+    {% endif %}
+
+    {% if post.created_at %}
+    <p class="timestamp">{{ post.created_at }}</p>
+    {% endif %}
+</div>
+
+<hr>
+
+<section class="comments-section">
+    <h3>Comments ({{ comments|length }})</h3>
+
+    {% if comments %}
+        {% for comment in comments %}
+            <div class="comment-block">
+                <p><strong>{{ comment.author.username }}</strong> said:</p>
+                <p>{{ comment.body }}</p>
+                <p class="timestamp">{{ comment.created_at }}</p>
+            </div>
+            <hr>
+        {% endfor %}
+    {% else %}
+        <p class="muted">No comments yet. Be the first.</p>
+    {% endif %}
+</section>
+
+<hr>
+
+<section class="add-comment">
+    {% if user.is_authenticated %}
+        <h4>Add a comment</h4>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.body }}
+            <button type="submit">Post</button>
+        </form>
+    {% else %}
+        <p><a href="{% url 'login' %}">Log in</a> to comment.</p>
+    {% endif %}
+</section>
+
+{% endblock %}

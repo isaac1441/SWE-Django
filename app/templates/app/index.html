@@ -22,7 +22,9 @@
         <div class="post-feed-area">
             {% for item in items %}
                 <div class="post-card">
+                    <a href="{% url 'post_detail' pk=item.pk %}" class="post-link">
                     <h4>{{ item.title }}</h4>
+                    </a>
                     <p>{{ item.body }}</p>
                     <a href='profile.html' style="font-size: small;">by {{ item.author.username }}</a>
 

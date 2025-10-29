@@ -9,7 +9,8 @@ from django.contrib.auth.views import LoginView
 from django.contrib import messages
 
 
-from .models import Post
+from .models import Post, Comment
+from .forms import CommentForm
 from .forms import SignUpForm, LogInForm, PostForm
 
 User = get_user_model()
@@ -46,6 +47,34 @@ def add_post_view(request):
 
             return redirect('home')
     return redirect('home')
+
+def post_detail(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+
+    comments = post.comments.all().order_by('created_at')
+
+    if request.method == 'POST':
+        if not request.user.is_authenticated:
+            return redirect('login')
+        
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            new_comment = form.save(commit=False)
+            new_comment.post = post
+            new_comment.author = request.user
+            new_comment.save()
+
+            return redirect('post_detail', pk=post.pk)
+    else:
+        form = CommentForm()
+    context = {
+        'post': post,
+        'comments': comments,
+        'form': form
+    }
+
+    return render(request, 'app/post_detail.html', context)
+
 
 @login_required
 def delete_post_view(request,pk):
