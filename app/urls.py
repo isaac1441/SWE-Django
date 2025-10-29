@@ -13,7 +13,8 @@ urlpatterns = [
     path("account/", views.account_view, name="account"),
     path("account/<slug:username>/", views.account_view, name="account"),
     path("add_post/", views.add_post_view, name="add_post"),
-    path("post/<int:pk>/delete/", views.delete_post_view, name="delete_post")
+    path("post/<int:pk>/delete/", views.delete_post_view, name="delete_post"),
+    path("post/<int:pk>/", views.post_detail, name="post_detail"),
 
     # 
     # path("cart/", views.cart_view, name="cart"),
