@@ -19,7 +19,6 @@ User = get_user_model()
 # Create your views here.
 
 def index(request):
-    # Subquery for the first (oldest) comment per post; switch to .order_by('-created_at') for newest
     first_comment = (
         Comment.objects
                .filter(post=OuterRef('pk'))
@@ -28,7 +27,7 @@ def index(request):
 
     items = (
         Post.objects
-            .order_by('-id')  # <<< use string, not the Python built-in id()
+            .order_by('-id')  
             .annotate(
                 first_comment_body   = Subquery(first_comment.values('body')[:1]),
                 first_comment_author = Subquery(first_comment.values('author__username')[:1]),
