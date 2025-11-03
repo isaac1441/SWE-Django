@@ -26,7 +26,22 @@
                     <h4>{{ item.title }}</h4>
                     </a>
                     <p>{{ item.body }}</p>
+
+
+                    {% if item.first_comment_body %}
+                        <div class="first-comment">
+                            <span><strong>{{ item.first_comment_author }}</strong>:</span>
+                            <span>{{ item.first_comment_body }}</span>
+                            <a href="{% url 'post_detail' pk=item.pk %}" class="view-all">View all comments</a>
+                        </div>
+                    {% endif %}
+
+
+
                     <a href="{% url 'profile' username=item.author.username%}" style="font-size: small;">by {{ item.author.username }}</a>
+
+
+                    
 
                     {%if item.author == user%}
                         <form method = 'POST' action="{% url 'delete_post' item.pk %}" class ="delete-form">

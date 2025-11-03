@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpResponseNotAllowed, Http404
 from django.urls import reverse
 from django.db import connection
-
+from django.db.models import OuterRef, Subquery
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
@@ -19,18 +19,24 @@ User = get_user_model()
 # Create your views here.
 
 def index(request):
-    ### 1. Get all the posts (newest first)
-    all_posts = Post.objects.all().order_by('-id') # Assumes you have a 'created_at' field
-    
-    ### 2. Create an empty form instance for the "Add Post" form
-    form = PostForm()
+    # Subquery for the first (oldest) comment per post; switch to .order_by('-created_at') for newest
+    first_comment = (
+        Comment.objects
+               .filter(post=OuterRef('pk'))
+               .order_by('created_at')
+    )
 
-    ### 3. Update the context
-    context = {
-        'items': all_posts,  # 'items' is now your list of posts
-        'form': form         # Pass the form to the template
-    }
-    return render(request, "app/index.html", context)
+    items = (
+        Post.objects
+            .order_by('-id')  # <<< use string, not the Python built-in id()
+            .annotate(
+                first_comment_body   = Subquery(first_comment.values('body')[:1]),
+                first_comment_author = Subquery(first_comment.values('author__username')[:1]),
+                first_comment_time   = Subquery(first_comment.values('created_at')[:1]),
+            )
+    )
+
+    return render(request, "app/index.html", {"items": items, "form": PostForm()})
 
 @login_required
 def add_post_view(request):
@@ -73,6 +79,8 @@ def post_detail(request, pk):
     }
 
     return render(request, 'app/post_detail.html', context)
+
+
 
 
 @login_required
