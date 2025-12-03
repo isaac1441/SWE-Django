@@ -136,8 +136,10 @@
             <button class="nav-icon-btn" title="Messages">💬</button>
             <div class="profile-avatar" href="{% url 'profile' %}" title="Profile"></div>
         {% else %}
+                <form action="{% url 'signup' %}" method="post">
                 {% csrf_token %}
                 <button class="btn btn-primary" type="submit">Sign up</button>
+            </form>
             </form>
              <form action="{% url 'login' %}" method="post">
                 {% csrf_token %}
