@@ -1,53 +1,104 @@
 {% extends "app/base.html" %}
+{%load static%}
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="{% static 'app/css/post-detail.css' %}">
+{% endblock %}
 
 {% block content %}
-
-<div class="post-card">
-    <h2>{{ post.title }}</h2>
-
-    <p>{{ post.body }}</p>
-
-    {% if post.author %}
-    <p><strong>Posted by:</strong> {{ post.author.username }}</p>
-    {% endif %}
-
-    {% if post.created_at %}
-    <p class="timestamp">{{ post.created_at }}</p>
-    {% endif %}
-</div>
-
-<hr>
-
-<section class="comments-section">
-    <h3>Comments ({{ comments|length }})</h3>
-
-    {% if comments %}
-        {% for comment in comments %}
-            <div class="comment-block">
-                <p><strong>{{ comment.author.username }}</strong> said:</p>
-                <p>{{ comment.body }}</p>
-                <p class="timestamp">{{ comment.created_at }}</p>
+<div class="container">
+    <!-- Main Post -->
+    <article class="post-detail">
+        <div class="post-header">
+            <div class="post-avatar"></div>
+            <div class="post-meta">
+                <div class="post-author">{{ post.author.username }}</div>
+                <div class="post-time">{{ post.created_at }}</div>
             </div>
-            <hr>
-        {% endfor %}
-    {% else %}
-        <p class="muted">No comments yet. Be the first.</p>
-    {% endif %}
-</section>
+        </div>
+        
+        <div class="post-content">
+            <div class="post-tags">
+                <span class="post-tag">Technology</span>
+                <span class="post-tag">Science</span>
+            </div>
+            
+            <h1 class="post-title">{{ post.title }}</h1>
+            
+            <div class="post-body">
+                <p>{{ post.body }}</p>
+            </div>
+        </div>
+        
+        <div class="post-actions">
+            <div class="vote-section">
+                <button class="vote-btn">▲</button>
+                <span class="vote-count">2.4k</span>
+                <button class="vote-btn">▼</button>
+            </div>
+            <button class="action-btn">↗ Share</button>
+            <button class="action-btn">🔖 Save</button>
+            <button class="action-btn">⋯ More</button>
+        </div>
+    </article>
 
-<hr>
-
-<section class="add-comment">
-    {% if user.is_authenticated %}
-        <h4>Add a comment</h4>
-        <form method="post">
+    <!-- Comments Section -->
+    <section class="comments-section">
+        <h2 class="comments-header">324 Comments</h2>
+        
+        <!-- Comment Form -->
+        {% if user.is_authenticated %}
+            <form method="post">
             {% csrf_token %}
             {{ form.body }}
             <button type="submit">Post</button>
+            </form>
+        
+            <div class="comment-form-actions">
+                <button type="submit" class="btn-comment" id="comment-btn" disabled>Comment</button>
+            </div>
         </form>
+        {% else %}  
+        <div style="padding: 20px; text-align: center; background: #272729; border-radius: 8px; margin-bottom: 24px;">
+            <p style="color: #818384; margin-bottom: 12px;">Log in to join the discussion</p>
+            <a href="{% url 'login' %}" class="btn-comment">Log In</a>
+        </div>
+        {% endif %}
+
+        <!-- Comments List -->
+        <div class="comments-list">
+            <h3>Comments ({{ comments|length }})</h3>
+            <!-- Comment 1 -->
+            {% if comments %}
+               {% for comment in comments %}
+                    <div class="comment">
+                        <div class="comment-avatar" style="background: linear-gradient(135deg, #f59e0b, #fbbf24);"></div>
+                        <div class="comment-content">
+                            <div class="comment-header">
+                                <span class="comment-author">{{ comment.author.username }}</span>
+                                <span class="comment-time">{{ comment.created_at }}</span>
+                            </div>
+                            <div class="comment-body">
+                                {{ comment.body }}
+                            </div>
+                            <div class="comment-actions">
+                                <div class="comment-vote">
+                                    <button class="comment-vote-btn">▲</button>
+                                    <span class="comment-vote-count">156</span>
+                                    <button class="comment-vote-btn">▼</button>
+                                </div>
+                                <button class="comment-action">Reply</button>
+                                <button class="comment-action">Share</button>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
     {% else %}
-        <p><a href="{% url 'signup' %}">Sign up</a> or <a href="{% url 'login' %}"> Log in</a>  to comment.</p>
+        <p class="muted">No comments yet. Be the first.</p>
     {% endif %}
-</section>
+           
+        </div>
+    </section>
+</div>
+
 
 {% endblock %}

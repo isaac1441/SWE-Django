@@ -1,58 +1,56 @@
 {% extends 'app/base.html' %}
-{% load static %}
+{% load static%}
+{% block title %}Home - Social Feed{% endblock %}
 
 {% block head %}
-    <link rel="stylesheet" type="text/css" href="{% static 'app/css/index.css' %}">
-    
-    {% endblock %}
-
-{% block title %}NodeLink{% endblock %}
+<link rel="stylesheet" type="text/css" href="{% static 'app/css/index.css' %}">
+{% endblock %}
 
 {% block content %}
-    <aside class="sidebar-left">
-        <form action="{% url 'add_post' %}" method="POST" class="post-form">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Add Post</button>
-        </form>
-    </aside>
-
-    <div class="scrolling-content">
-        <div class="banner"></div>
-        <div class="post-feed-area">
-            {% for item in items %}
-                <div class="post-card">
-                    <a href="{% url 'post_detail' pk=item.pk %}" class="post-link">
-                    <h4>{{ item.title }}</h4>
-                    </a>
-                    <p>{{ item.body }}</p>
-
-
-                    {% if item.first_comment_body %}
-                        <div class="first-comment">
-                            <span><strong>{{ item.first_comment_author }}</strong>:</span>
-                            <span>{{ item.first_comment_body }}</span>
-                            <a href="{% url 'post_detail' pk=item.pk %}" class="view-all">View all comments</a>
-                        </div>
-                    {% endif %}
-
-
-
-                    <a href="{% url 'profile' username=item.author.username%}" style="font-size: small;">by {{ item.author.username }}</a>
-
-
-                    
-
-                    {%if item.author == user%}
-                        <form method = 'POST' action="{% url 'delete_post' item.pk %}" class ="delete-form">
-                            {% csrf_token %}
-                            <button type="submit" class="delete-button">Delete Post</button>
-                        </form>
-                    {% endif %}
-                </div>
-            {% endfor %}
-        </div> 
+<div class="container">
+    <div class="tags-filter">
+        <button class="tag-btn active">All</button>
+        <button class="tag-btn">Technology</button>
+        <button class="tag-btn">Gaming</button>
+        <button class="tag-btn">Science</button>
+        <button class="tag-btn">Art</button>
+        <button class="tag-btn">Music</button>
+        <button class="tag-btn">Sports</button>
+        <button class="tag-btn">News</button>
     </div>
 
-
+    <main class="feed">
+        {% for post in items%}
+        <article class="post">
+            <a href="{% url 'post_detail' pk=post.pk %}" class="post-link" style="text-decoration: none;
+    color: inherit;">
+            <div class="post-header" href="{% url 'profile' username=post.author.username%}">
+                <div class="post-avatar"></div>
+                <div class="post-meta">
+                    <div class="post-author" >{{ item.author.username }}</div>
+                    <div class="post-time">2 hours ago</div>
+                </div>
+            </div>
+            <div class="post-content">
+                <div class="post-tags">
+                    <span class="post-tag">Technology</span>
+                    <span class="post-tag">Science</span>
+                </div>
+                <h2 class="post-title">{{post.title}}</h2>
+                <p class="post-text">{{post.body}}</p>
+            </div>
+            <div class="post-actions">
+                <div class="vote-section">
+                    <button class="vote-btn">▲</button>
+                    <span class="vote-count">0</span>
+                    <button class="vote-btn">▼</button>
+                </div>
+                <button class="action-btn">Comments</button>
+                <button class="action-btn">↗  Share</button>
+                <button class="action-btn">⋯  More</button>
+            </div>
+        </article>
+       {% endfor%}
+    </main>
+</div>
 {% endblock %}

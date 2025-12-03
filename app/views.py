@@ -38,6 +38,20 @@ def index(request):
     return render(request, "app/index.html", {"items": items, "form": PostForm()})
 
 @login_required
+def add_comment_view(request):
+    if request.method == 'POST':
+        form=PostForm(request.POST)
+        if form.is_valid():
+            new_post=form.save(commit=False)
+
+            new_post.author = request.user
+
+            new_post.save()
+
+            return redirect('home')
+    return redirect('home')
+
+@login_required
 def add_post_view(request):
     if request.method == 'POST':
         form=PostForm(request.POST)

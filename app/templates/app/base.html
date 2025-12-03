@@ -11,20 +11,15 @@
     {% block head %}
     {% endblock %}
 
-    <link rel="stylesheet" type="text/css" href="{% static 'app/css/base-style.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'app/css/navbar.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'app/css/base.css' %}">
 
 </head>
 <body>
-    <div class="fixed-navbar-container">
-        {% include "app/navbar.html" %}
-    </div>
+    {% include 'app/navbar.html' %}
+    
+    {% block content %}{% endblock %}
 
-    <main class="main-content-area">
-        {% block content %}
-        
-        {% endblock %}
-    </main>
+    {% block extra_js %}{% endblock %}
 
 </body>
 </html>
