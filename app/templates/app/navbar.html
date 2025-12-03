@@ -131,8 +131,9 @@
                 <button class="btn btn-secondary" type="submit">Logout</button>
             </form>
             
-            <button class="btn-create" type="button" onclick="showForm()"><span style="font-weight: 1;">+</span></button>
-            <button class="nav-icon-btn" title="Home">🏠</button>
+            <a href="{% url 'add_post' %}" class="btn-create" style="text-decoration: none; display: inline-block;">
+                <span style="font-weight: 1;">+</span>
+            </a>            <button class="nav-icon-btn" title="Home">🏠</button>
             <button class="nav-icon-btn" title="Messages">💬</button>
             <div class="profile-avatar" href="{% url 'profile' %}" title="Profile"></div>
         {% else %}
@@ -148,15 +149,3 @@
         {% endif %}
     </div>
 </nav>
-
-<script>
-    function showForm() {
-        const form = document.getElementById('post-form');
-        
-        if (form.style.display === 'block') {
-            form.style.display = 'none';
-        } else {
-            form.style.display = 'block';
-        }
-    }
-</script>

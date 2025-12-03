@@ -64,7 +64,9 @@ def add_post_view(request):
             new_post.save()
 
             return redirect('home')
-    return redirect('home')
+    else:
+        form = PostForm()
+    return render(request, 'app/create_post.html', {'form':form})
 
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
