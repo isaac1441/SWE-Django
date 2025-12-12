@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 User = get_user_model()
 # Create your models here.
@@ -40,5 +42,34 @@ class Profile(models.Model):
     bio = models.TextField(blank=True)
     avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
 
+    following = models.ManyToManyField(
+        'self',
+        symmetrical=False,
+        related_name='followers',
+        blank=True
+    )
+
     def __str__(self):
         return self.user.username
+    
+    def follow(self, profile):
+        """Follow another profile."""
+        if profile != self:
+            self.following.add(profile)
+
+    def unfollow(self, profile):
+        """UNfollow another profile."""
+        if profile != self:
+            self.following.remove(profile)
+
+    def is_following(self, profile) -> bool:
+        """Check if following another profile."""
+        return self.following.filter(pk=profile.pk).exists()
+    
+    @property
+    def follower_count(self):
+        return self.followers.count()
+    
+    @property
+    def following_count(self):
+        return self.following.count()

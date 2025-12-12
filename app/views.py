@@ -9,7 +9,7 @@ from django.contrib.auth.views import LoginView
 from django.contrib import messages
 
 
-from .models import Post, Comment
+from .models import Post, Comment, Profile
 from .forms import CommentForm
 from .forms import SignUpForm, LogInForm, PostForm
 
@@ -120,20 +120,69 @@ def my_profile_redirect(request):
     return redirect("profile", username=request.user.username)
 
 def profile_view(request, username):
-    
-    if username == request.user.username:
-        # The user is viewing their own profile
-        profile_user = request.user
-        is_own_profile = True
-    else:
-        profile_user = get_object_or_404(User, username=username)
-        is_own_profile = False
+    # Whose profile are we viewing?
+    profile_user = get_object_or_404(User, username=username)
+
+    # Make sure a Profile exists for them
+    profile_obj, _ = Profile.objects.get_or_create(user=profile_user)
+
+    is_own_profile = request.user.is_authenticated and (request.user == profile_user)
+
+    # Is the current user following this profile?
+    is_following = False
+    if request.user.is_authenticated and not is_own_profile:
+        viewer_profile, _ = Profile.objects.get_or_create(user=request.user)
+        is_following = viewer_profile.following.filter(pk=profile_obj.pk).exists()
 
     context = {
         "profile_user": profile_user,
+        "profile_obj": profile_obj,
         "is_own_profile": is_own_profile,
+        "is_following": is_following,
+        # use the actual relations, not missing properties
+        "followers_count": profile_obj.followers.count(),
+        "following_count": profile_obj.following.count(),
     }
     return render(request, "app/profile.html", context)
+
+
+@login_required
+def follow_user(request, username):
+    if request.method != "POST":
+        return HttpResponseNotAllowed(["POST"])
+
+    target_user = get_object_or_404(User, username=username)
+
+    # Don’t allow following yourself
+    if target_user == request.user:
+        return redirect("profile", username=username)
+
+    follower_profile, _ = Profile.objects.get_or_create(user=request.user)
+    target_profile, _ = Profile.objects.get_or_create(user=target_user)
+
+    follower_profile.follow(target_profile)
+
+    messages.success(request, f"You are now following {target_user.username}.")
+    return redirect("profile", username=username)
+
+
+@login_required
+def unfollow_user(request, username):
+    if request.method != "POST":
+        return HttpResponseNotAllowed(["POST"])
+
+    target_user = get_object_or_404(User, username=username)
+
+    if target_user == request.user:
+        return redirect("profile", username=username)
+
+    follower_profile, _ = Profile.objects.get_or_create(user=request.user)
+    target_profile, _ = Profile.objects.get_or_create(user=target_user)
+
+    follower_profile.unfollow(target_profile)
+
+    messages.success(request, f"You unfollowed {target_user.username}.")
+    return redirect("profile", username=username)
 
 
 def signup_view(request):

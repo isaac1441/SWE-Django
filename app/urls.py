@@ -16,6 +16,10 @@ urlpatterns = [
     path("add_post/", views.add_post_view, name="add_post"),
     path("post/<int:pk>/delete/", views.delete_post_view, name="delete_post"),
     path("post/<int:pk>/", views.post_detail, name="post_detail"),
+    path("profile/<slug:username>/follow/", views.follow_user, name="follow_user"),
+    path("profile/<slug:username>/unfollow/", views.unfollow_user, name="unfollow_user"),
+
+
 
     # 
     # path("cart/", views.cart_view, name="cart"),
