@@ -20,6 +20,7 @@
   </p>
 
   {% if user.is_authenticated and not is_own_profile %}
+  <div class="d-flex gap-2 align-items-center">
     <form method="post"
           action="{% if is_following %}{% url 'unfollow_user' profile_user.username %}
                   {% else %}{% url 'follow_user' profile_user.username %}{% endif %}">
@@ -28,8 +29,15 @@
         {% if is_following %}Unfollow{% else %}Follow{% endif %}
       </button>
     </form>
-  {% elif is_own_profile %}
-    <p class="text-muted mt-2">This is your profile.</p>
-  {% endif %}
+
+    <a class="btn btn-outline-secondary"
+       href="{% url 'messaging:start_dm' profile_user.username %}">
+      DM
+    </a>
+  </div>
+{% elif is_own_profile %}
+  <p class="text-muted mt-2">This is your profile.</p>
+{% endif %}
+
 </div>
 {% endblock %}

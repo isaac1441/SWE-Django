@@ -61,13 +61,19 @@
         font-weight: 600;
         cursor: pointer;
         transition: all 0.2s;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: 40px;
+        line-height: 1;
     }
 
     .btn-create:hover {
         background: #9333ea;
     }
 
-    .nav-icon-btn {
+    .nav-icon-link {
         width: 40px;
         height: 40px;
         border-radius: 50%;
@@ -80,14 +86,15 @@
         transition: all 0.2s;
         font-size: 18px;
         color: #d7dadc;
+        text-decoration: none;
     }
 
-    .nav-icon-btn:hover {
+    .nav-icon-link:hover {
         background: #272729;
         border-color: #d7dadc;
     }
 
-    .profile-avatar {
+    .profile-avatar-link {
         width: 40px;
         height: 40px;
         border-radius: 50%;
@@ -95,9 +102,11 @@
         cursor: pointer;
         transition: all 0.2s;
         border: 2px solid transparent;
+        display: inline-block;
+        text-decoration: none;
     }
 
-    .profile-avatar:hover {
+    .profile-avatar-link:hover {
         border-color: #d7dadc;
     }
 
@@ -121,31 +130,38 @@
     <div class="nav-left">
         <a href="/" class="logo">NodeLink</a>
     </div>
+
     <div class="search-bar">
         <input type="text" placeholder="Search posts...">
     </div>
+
     <div class="nav-buttons">
         {% if user.is_authenticated %}
-            <form action="{% url 'logout' %}" method="post">
+
+            <a href="/" class="nav-icon-link" title="Home">🏠</a>
+
+            {# Create Post #}
+            <a href="{% url 'add_post' %}" class="btn-create" title="Create Post">
+                <span style="font-weight: 1;">+</span>
+            </a>
+
+            {# Messages Inbox (DMs) #}
+            <a href="{% url 'messaging:inbox' %}" class="nav-icon-link" title="Messages">💬</a>
+
+            {# Profile (adjust this URL name if yours is different) #}
+            <a href="{% url 'profile' user.username %}" class="profile-avatar-link" title="Profile"></a>
+
+            {# Logout should be POST #}
+            <form action="{% url 'logout' %}" method="post" style="margin: 0;">
                 {% csrf_token %}
                 <button class="btn btn-secondary" type="submit">Logout</button>
             </form>
-            
-            <a href="{% url 'add_post' %}" class="btn-create" style="text-decoration: none; display: inline-block;">
-                <span style="font-weight: 1;">+</span>
-            </a>            <button class="nav-icon-btn" title="Home">🏠</button>
-            <button class="nav-icon-btn" title="Messages">💬</button>
-            <div class="profile-avatar" href="{% url 'profile' %}" title="Profile"></div>
+
         {% else %}
-                <form action="{% url 'signup' %}" method="post">
-                {% csrf_token %}
-                <button class="btn btn-primary" type="submit">Sign up</button>
-            </form>
-            </form>
-             <form action="{% url 'login' %}" method="post">
-                {% csrf_token %}
-                <button class="btn btn-secondary" type="submit">Log in</button>
-            </form>
+
+            <a href="{% url 'signup' %}" class="nav-icon-link" title="Sign up">📝</a>
+            <a href="{% url 'login' %}" class="nav-icon-link" title="Log in">🔑</a>
+
         {% endif %}
     </div>
 </nav>

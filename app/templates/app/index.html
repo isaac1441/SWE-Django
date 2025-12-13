@@ -1,5 +1,5 @@
-{% extends 'app/base.html' %}
-{% load static%}
+{% extends "app/base.html" %}
+{% load static %}
 {% block title %}Home - Social Feed{% endblock %}
 
 {% block head %}
@@ -8,65 +8,82 @@
 
 {% block content %}
 <div class="container">
-    <div class="tags-filter">
-        <button class="tag-btn active">All</button>
-        <button class="tag-btn">Technology</button>
-        <button class="tag-btn">Gaming</button>
-        <button class="tag-btn">Science</button>
-        <button class="tag-btn">Art</button>
-        <button class="tag-btn">Music</button>
-        <button class="tag-btn">Sports</button>
-        <button class="tag-btn">News</button>
-    </div>
+  <div class="tags-filter">
+    <button class="tag-btn active">All</button>
+    <button class="tag-btn">Technology</button>
+    <button class="tag-btn">Gaming</button>
+    <button class="tag-btn">Science</button>
+    <button class="tag-btn">Art</button>
+    <button class="tag-btn">Music</button>
+    <button class="tag-btn">Sports</button>
+    <button class="tag-btn">News</button>
+  </div>
 
-    <main class="feed">
-        {% for post in items%}
-        <article class="post">
-            <a href="{% url 'post_detail' pk=post.pk %}" class="post-link" style="text-decoration: none;
-    color: inherit;">
-            <div class="post-header" href="{% url 'profile' username=post.author.username%}">
-                <div class="post-avatar"></div>
-                <div class="post-meta">
-                    <div class="post-author" >{{ post.author.username }}</div>
-                    <div class="post-time">2 hours ago</div>
-                </div>
-            </div>
-            <div class="post-content">
-                <div class="post-tags">
-                    <span class="post-tag">Technology</span>
-                    <span class="post-tag">Science</span>
-                </div>
-                <h2 class="post-title">{{post.title}}</h2>
-                <p class="post-text">{{post.body}}</p>
-            </div>
-            <div class="post-actions">
-                <div class="vote-section">
-                    <button class="vote-btn">▲</button>
-                    <span class="vote-count">0</span>
-                    <button class="vote-btn">▼</button>
-                </div>
-                <button class="action-btn">Comments</button>
-                <button class="action-btn">↗  Share</button>
-                <button class="action-btn">⋯  More</button>
-            </div>
-        </article>
-       {% endfor%}
-    </main>
+  <main class="feed">
+    {% for post in items %}
+      <article class="post">
 
-    <div id="post-form" class="post-form" style="display: none;">
+        <div class="post-header">
+          <a class="post-author"
+             href="{% url 'profile' post.author.username %}"
+             style="text-decoration: none; color: inherit;">
+            {{ post.author.username }}
+          </a>
+        </div>
+
+        {# Make content clickable to open the post #}
+        <a href="{% url 'post_detail' pk=post.pk %}"
+           class="post-link"
+           style="text-decoration: none; color: inherit; display: block;">
+
+          <div class="post-content">
+            <div class="post-tags">
+              <span class="post-tag">Technology</span>
+              <span class="post-tag">Science</span>
+            </div>
+
+            <h2 class="post-title">{{ post.title }}</h2>
+            <p class="post-text">{{ post.body }}</p>
+          </div>
+        </a>
+
+        <div class="post-actions">
+          <div class="vote-section">
+            <button class="vote-btn" type="button">▲</button>
+            <span class="vote-count">0</span>
+            <button class="vote-btn" type="button">▼</button>
+          </div>
+
+          <a class="action-btn"
+             href="{% url 'post_detail' pk=post.pk %}"
+             style="text-decoration: none; color: inherit;">
+            Comments
+          </a>
+
+          <button class="action-btn" type="button">↗ Share</button>
+          <button class="action-btn" type="button">⋯ More</button>
+        </div>
+
+      </article>
+    {% empty %}
+      <p class="muted">No posts yet.</p>
+    {% endfor %}
+  </main>
+
+  <div id="post-form" class="post-form" style="display: none;">
     <div class="form-container">
-        <h3>Create a Post</h3>
-        
-        <form method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            <input type="text" name="title" placeholder="Title">
-            <textarea name="body" placeholder="What's on your mind?"></textarea>
-            
-            <button class="btn btn-primary" type="submit">Post</button>
-            
-            <button type="button" onclick="showForm()">Cancel</button>
-        </form>
+      <h3>Create a Post</h3>
+
+      <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="text" name="title" placeholder="Title">
+        <textarea name="body" placeholder="What's on your mind?"></textarea>
+
+        <button class="btn btn-primary" type="submit">Post</button>
+        <button type="button" onclick="showForm()">Cancel</button>
+      </form>
     </div>
-</div>
+  </div>
+
 </div>
 {% endblock %}
