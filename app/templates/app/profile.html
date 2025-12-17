@@ -1,50 +1,75 @@
 {% extends "app/base.html" %}
+{%load static%}
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="{% static 'app/css/profile.css' %}">
+{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-  <h2>{{ profile_user.username }}'s Profile</h2>
+<div class="profile-container">
+    <div class="profile-section">
+        <div class="profile-header">
+            {% if profile_obj.avatar %}
+                <img src="{{ profile_obj.avatar.url }}" 
+                     alt="{{ profile_user.username }} avatar"
+                     class="profile-avatar">
+            {% else %}
+                <div class="avatar-placeholder">
+                    {{ profile_user.username|first|upper }}
+                </div>
+            {% endif %}
 
-  {% if profile_obj.avatar %}
-    <img src="{{ profile_obj.avatar.url }}" alt="{{ profile_user.username }} avatar"
-         style="width:120px; height:120px; border-radius:50%; object-fit:cover;">
-  {% endif %}
+            <div class="profile-info">
+                <h1 class="profile-username">{{ profile_user.username }}</h1>
+                
+                <div class="profile-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">{{ followers_count }}</span>
+                        <span class="stat-label">Followers</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">{{ following_count }}</span>
+                        <span class="stat-label">Following</span>
+                    </div>
+                </div>
 
-  <p class="mt-3">
-    {{ profile_obj.bio|default:"This user hasn't written a bio yet." }}
-  </p>
+                <div class="profile-bio">
+                    {{ profile_obj.bio|default:"This user hasn't written a bio yet." }}
+                </div>
+            </div>
+        </div>
 
-  <p class="mt-2">
-    <strong>Followers:</strong> {{ followers_count }}
-    &nbsp;|&nbsp;
-    <strong>Following:</strong> {{ following_count }}
-  </p>
+        <div class="profile-actions">
+            {% if user.is_authenticated and not is_own_profile %}
+                <form method="post"
+                      action="{% if is_following %}{% url 'unfollow_user' profile_user.username %}
+                              {% else %}{% url 'follow_user' profile_user.username %}{% endif %}"
+                      class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" 
+                            class="btn btn-follow {% if is_following %}btn-secondary{% else %}btn-primary{% endif %}">
+                        {% if is_following %}Following{% else %}Follow{% endif %}
+                    </button>
+                </form>
 
-  {% if user.is_authenticated and not is_own_profile %}
-  <div class="d-flex gap-2 align-items-center">
-    <form method="post"
-          action="{% if is_following %}{% url 'unfollow_user' profile_user.username %}
-                  {% else %}{% url 'follow_user' profile_user.username %}{% endif %}">
-      {% csrf_token %}
-      <button type="submit" class="btn btn-primary">
-        {% if is_following %}Unfollow{% else %}Follow{% endif %}
-      </button>
-    </form>
+                <a class="btn btn-dm"
+                   href="{% url 'messaging:start_dm' profile_user.username %}">
+                    <i class="fas fa-envelope"></i> Message
+                </a>
 
-    <a class="btn btn-outline-secondary"
-       href="{% url 'messaging:start_dm' profile_user.username %}">
-      DM
-    </a>
-  </div>
-{% elif is_own_profile %}
-  <p class="text-muted mt-2">This is your profile.</p>
-  <form action="{% url 'logout' %}" method="post" style="margin: 0;">
-
-                {% csrf_token %}
-
-                <button class="btn " type="submit">Logout</button>
-
-            </form>
-{% endif %}
-
+            {% elif is_own_profile %}
+                <div class="d-flex gap-2 align-items-center">
+                    <div class="own-profile-message">
+                        <i class="fas fa-user-check"></i> This is your profile
+                    </div>
+                    <form action="{% url 'logout' %}" method="post" class="d-inline">
+                        {% csrf_token %}
+                        <button class="btn btn-logout" type="submit">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </form>
+                </div>
+            {% endif %}
+        </div>
+    </div>
 </div>
 {% endblock %}

@@ -1,21 +1,462 @@
 {% extends "app/base.html" %}
 {% block content %}
-<div class="container mt-4">
-  <h2>Messages</h2>
+<style>
+    .inbox-container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
 
-  {% if conversations %}
-    <ul class="list-group mt-3">
-      {% for c in conversations %}
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-          <div>
-            <strong>{{ c.other.username }}</strong>
-          </div>
-          <a class="btn btn-sm btn-outline-primary" href="{% url 'messaging:thread' c.id %}">Open</a>
-        </li>
-      {% endfor %}
-    </ul>
-  {% else %}
-    <p class="text-muted mt-3">No conversations yet.</p>
-  {% endif %}
+    .inbox-header {
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #eaeaea;
+    }
+
+    .inbox-title {
+        font-size: 2rem;
+        font-weight: 600;
+        color: #333;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .inbox-title i {
+        color: #667eea;
+    }
+
+    .conversations-list {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+    }
+
+    .conversation-item {
+        display: flex;
+        align-items: center;
+        padding: 1.25rem 1.5rem;
+        border-bottom: 1px solid #f0f0f0;
+        transition: all 0.2s ease;
+        cursor: pointer;
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .conversation-item:hover {
+        background: #f8f9ff;
+        transform: translateX(5px);
+    }
+
+    .conversation-item:last-child {
+        border-bottom: none;
+    }
+
+    .conversation-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 1.2rem;
+        margin-right: 1rem;
+        flex-shrink: 0;
+    }
+
+    .conversation-content {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .conversation-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.25rem;
+    }
+
+    .conversation-username {
+        font-weight: 600;
+        font-size: 1.1rem;
+        color: #333;
+        margin: 0;
+    }
+
+    .conversation-time {
+        font-size: 0.85rem;
+        color: #888;
+    }
+
+    .conversation-preview {
+        color: #666;
+        font-size: 0.95rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin: 0;
+    }
+
+    .conversation-status {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .unread-badge {
+        background: #667eea;
+        color: white;
+        font-size: 0.75rem;
+        font-weight: 600;
+        padding: 0.2rem 0.6rem;
+        border-radius: 12px;
+        min-width: 20px;
+        text-align: center;
+    }
+
+    .open-btn {
+        background: transparent;
+        border: 2px solid #667eea;
+        color: #667eea;
+        padding: 0.5rem 1.25rem;
+        border-radius: 25px;
+        font-weight: 500;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        text-decoration: none;
+    }
+
+    .open-btn:hover {
+        background: #667eea;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+        text-decoration: none;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+    }
+
+    .empty-icon {
+        font-size: 4rem;
+        color: #e0e0e0;
+        margin-bottom: 1.5rem;
+    }
+
+    .empty-title {
+        font-size: 1.5rem;
+        color: #666;
+        margin-bottom: 0.75rem;
+    }
+
+    .empty-subtitle {
+        color: #888;
+        margin-bottom: 2rem;
+        max-width: 400px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .start-conversation-btn {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 0.75rem 2rem;
+        border-radius: 25px;
+        font-weight: 500;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .start-conversation-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+        color: white;
+        text-decoration: none;
+    }
+
+    .inbox-stats {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 10px;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .stats-item {
+        text-align: center;
+        flex: 1;
+    }
+
+    .stats-number {
+        font-size: 1.8rem;
+        font-weight: 600;
+        display: block;
+    }
+
+    .stats-label {
+        font-size: 0.9rem;
+        opacity: 0.9;
+    }
+
+    /* Search bar */
+    .search-container {
+        margin-bottom: 1.5rem;
+    }
+
+    .search-input {
+        width: 100%;
+        padding: 0.85rem 1.25rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 25px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: white;
+    }
+
+    .search-input:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .search-input::placeholder {
+        color: #999;
+    }
+
+    @media (max-width: 768px) {
+        .inbox-container {
+            padding: 1rem;
+        }
+        
+        .conversation-item {
+            padding: 1rem;
+        }
+        
+        .conversation-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.25rem;
+        }
+        
+        .conversation-time {
+            align-self: flex-end;
+        }
+        
+        .open-btn span {
+            display: none;
+        }
+        
+        .open-btn i {
+            margin: 0;
+        }
+        
+        .inbox-stats {
+            flex-direction: column;
+            gap: 1rem;
+            text-align: center;
+        }
+    }
+
+    /* Animation for new conversations */
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    .conversation-item {
+        animation: slideIn 0.3s ease forwards;
+    }
+
+    .conversation-item:nth-child(1) { animation-delay: 0.1s; }
+    .conversation-item:nth-child(2) { animation-delay: 0.2s; }
+    .conversation-item:nth-child(3) { animation-delay: 0.3s; }
+    .conversation-item:nth-child(4) { animation-delay: 0.4s; }
+    .conversation-item:nth-child(5) { animation-delay: 0.5s; }
+
+    /* Active conversation indicator */
+    .conversation-item.active {
+        background: linear-gradient(90deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.05) 100%);
+        border-left: 4px solid #667eea;
+    }
+
+    /* User status indicator */
+    .status-indicator {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #4CAF50;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        border: 2px solid white;
+        display: none; /* You can enable this with dynamic data */
+    }
+
+    .avatar-container {
+        position: relative;
+        display: inline-block;
+    }
+</style>
+
+<div class="inbox-container">
+    <div class="inbox-header">
+        <h1 class="inbox-title">
+            <i class="fas fa-inbox"></i>
+            Messages
+        </h1>
+        <p class="text-muted mb-0">Manage your conversations and connect with others</p>
+    </div>
+
+    {% if conversations %}
+        <!-- Stats Bar (Optional - you can populate with actual data) -->
+        <div class="inbox-stats">
+            <div class="stats-item">
+                <span class="stats-number">{{ conversations|length }}</span>
+                <span class="stats-label">Conversations</span>
+            </div>
+            <div class="stats-item">
+                <span class="stats-number">0</span>
+                <span class="stats-label">Unread</span>
+            </div>
+            <div class="stats-item">
+                <span class="stats-number">{{ user.last_login|date:"M d"|default:"Today" }}</span>
+                <span class="stats-label">Last Active</span>
+            </div>
+        </div>
+
+        <!-- Search Bar (Optional - requires JavaScript implementation) -->
+        <div class="search-container">
+            <input type="text" 
+                   class="search-input" 
+                   placeholder="Search conversations..." 
+                   id="searchConversations">
+        </div>
+
+        <!-- Conversations List -->
+        <div class="conversations-list">
+            {% for c in conversations %}
+                {% with other_user=c.other %}
+                <div class="conversation-item">
+                    <div class="avatar-container">
+                        <div class="conversation-avatar">
+                            {{ other_user.username|first|upper }}
+                        </div>
+                        <!-- <div class="status-indicator"></div> -->
+                    </div>
+                    
+                    <div class="conversation-content">
+                        <div class="conversation-header">
+                            <h4 class="conversation-username">
+                                {{ other_user.username }}
+                                {% if c.unread_count > 0 %}
+                                    <span class="unread-badge">{{ c.unread_count }}</span>
+                                {% endif %}
+                            </h4>
+                            <span class="conversation-time">
+                                {{ c.last_message.created_at|date:"M d"|default:"Recently" }}
+                            </span>
+                        </div>
+                        <p class="conversation-preview">
+                            {% if c.last_message %}
+                                {% if c.last_message.sender == user %}
+                                    You: {{ c.last_message.body|truncatechars:50 }}
+                                {% else %}
+                                    {{ c.last_message.body|truncatechars:50 }}
+                                {% endif %}
+                            {% else %}
+                                Start a conversation...
+                            {% endif %}
+                        </p>
+                    </div>
+                    
+                    <div class="conversation-status">
+                        <a href="{% url 'messaging:thread' c.id %}" class="open-btn">
+                            <i class="fas fa-comment"></i>
+                            <span>Open</span>
+                        </a>
+                    </div>
+                </div>
+                {% endwith %}
+            {% endfor %}
+        </div>
+    {% else %}
+        <!-- Empty State -->
+        <div class="empty-state">
+            <div class="empty-icon">
+                <i class="fas fa-comments"></i>
+            </div>
+            <h3 class="empty-title">No conversations yet</h3>
+            <p class="empty-subtitle">
+                Start connecting with other users by sending them a message. 
+                Your conversations will appear here once you start messaging.
+            </p>
+            <!-- Optional: Add a link to users list or search -->
+            <a href="{% url 'user_list' %}" class="start-conversation-btn">
+                <i class="fas fa-plus"></i>
+                Start New Conversation
+            </a>
+        </div>
+    {% endif %}
 </div>
+
+<script>
+    // Search functionality
+    document.getElementById('searchConversations')?.addEventListener('input', function(e) {
+        const searchTerm = e.target.value.toLowerCase();
+        const conversations = document.querySelectorAll('.conversation-item');
+        
+        conversations.forEach(conv => {
+            const username = conv.querySelector('.conversation-username').textContent.toLowerCase();
+            const preview = conv.querySelector('.conversation-preview').textContent.toLowerCase();
+            
+            if (username.includes(searchTerm) || preview.includes(searchTerm)) {
+                conv.style.display = 'flex';
+            } else {
+                conv.style.display = 'none';
+            }
+        });
+    });
+
+    // Auto-refresh conversations (optional)
+    setInterval(() => {
+        location.reload();
+    }, 30000); // Refresh every 30 seconds
+
+    // Mark as read on click
+    document.querySelectorAll('.conversation-item').forEach(item => {
+        item.addEventListener('click', function(e) {
+            if (!e.target.classList.contains('open-btn') && !e.target.closest('.open-btn')) {
+                this.querySelector('.open-btn').click();
+            }
+        });
+    });
+</script>
+
+<!-- Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 {% endblock %}
