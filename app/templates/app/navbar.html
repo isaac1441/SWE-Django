@@ -152,15 +152,12 @@
             <a href="{% url 'profile' user.username %}" class="profile-avatar-link" title="Profile"></a>
 
             {# Logout should be POST #}
-            <form action="{% url 'logout' %}" method="post" style="margin: 0;">
-                {% csrf_token %}
-                <button class="btn btn-secondary" type="submit">Logout</button>
-            </form>
+            
 
         {% else %}
 
-            <a href="{% url 'signup' %}" class="nav-icon-link" title="Sign up">📝</a>
-            <a href="{% url 'login' %}" class="nav-icon-link" title="Log in">🔑</a>
+            <a href="{% url 'signup' %}" class ="btn" title="Sign up">Sign Up</a>
+            <a href="{% url 'login' %}" class ="btn" title="Log in">Log In</a>
 
         {% endif %}
     </div>

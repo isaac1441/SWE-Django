@@ -7,9 +7,10 @@ from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
 from django.contrib import messages
+import json
 
 
-from .models import Post, Comment, Profile
+from .models import Post, Comment, Profile, Tag
 from .forms import CommentForm
 from .forms import SignUpForm, LogInForm, PostForm
 
@@ -27,15 +28,17 @@ def index(request):
 
     items = (
         Post.objects
-            .order_by('-id')  
+            .all()
+            .order_by('-created_at')  
             .annotate(
-                first_comment_body   = Subquery(first_comment.values('body')[:1]),
+                first_comment_body = Subquery(first_comment.values('body')[:1]),
                 first_comment_author = Subquery(first_comment.values('author__username')[:1]),
-                first_comment_time   = Subquery(first_comment.values('created_at')[:1]),
+                first_comment_time = Subquery(first_comment.values('created_at')[:1]),
             )
     )
 
-    return render(request, "app/index.html", {"items": items, "form": PostForm()})
+    tags = Tag.objects.all()
+    return render(request, 'app/index.html', {'items': items, 'tags': tags})
 
 @login_required
 def add_comment_view(request):
@@ -54,25 +57,38 @@ def add_comment_view(request):
 @login_required
 def add_post_view(request):
     if request.method == 'POST':
-        form=PostForm(request.POST)
+
+        form = PostForm(request.POST)
         if form.is_valid():
-            #new post created
-            new_post=form.save(commit=False)
+            print("Form is valid")
+            post = form.save(commit=False)
+            post.author = request.user
+            post.save()
 
-            new_post.author = request.user
-
-            new_post.save()
-
+            selected_tag_ids = request.POST.getlist('tags')
+            
+            print(f"Selected tag IDs: {selected_tag_ids}")
+            
+            if selected_tag_ids:
+                selected_tags = Tag.objects.filter(id__in=selected_tag_ids)
+                post.tags.set(selected_tags)
+            else:
+                post.tags.clear()
+            
             return redirect('home')
+        else:
+            print("Form is not valid")
+            print(form.errors)
     else:
         form = PostForm()
-    return render(request, 'app/create_post.html', {'form':form})
-
+    
+    tags = Tag.objects.all()
+    return render(request, 'app/create_post.html', {'form': form, 'tags': tags})
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
 
     comments = post.comments.all().order_by('created_at')
-
+    tags = Tag.objects.all()
     if request.method == 'POST':
         if not request.user.is_authenticated:
             return redirect('login')
@@ -90,7 +106,8 @@ def post_detail(request, pk):
     context = {
         'post': post,
         'comments': comments,
-        'form': form
+        'form': form,
+        'tags': tags,
     }
 
     return render(request, 'app/post_detail.html', context)
@@ -232,18 +249,4 @@ def logout_view(request):
     logout(request)
     next_url = request.META.get('HTTP_REFERER', 'home')
     return redirect(next_url)
-
-# def cart_view(request, cart):
-#     return render(request, 'app/cart.html', {'cart': cart})
-
-# def product_page(request, product_slug):
-#    products = clothing_item.objects.filter(slug=product_slug).order_by('id')   
-#    product = products.first()
-#    if not product:
-#        raise Http404("No product found")
-#    return render(request, "store/product-page.html", {'product': product})
-
-# def product_by_id(request, product_id):
-#     product = get_object_or_404(clothing_item, id=product_id)
-#     return render(request, 'store/product-page.html', {'product': product})
 

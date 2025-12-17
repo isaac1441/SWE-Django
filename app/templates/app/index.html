@@ -8,27 +8,31 @@
 
 {% block content %}
 <div class="container">
-  <div class="tags-filter">
-    <button class="tag-btn active">All</button>
-    <button class="tag-btn">Technology</button>
-    <button class="tag-btn">Gaming</button>
-    <button class="tag-btn">Science</button>
-    <button class="tag-btn">Art</button>
-    <button class="tag-btn">Music</button>
-    <button class="tag-btn">Sports</button>
-    <button class="tag-btn">News</button>
+  <div class="tags-filter" id="tags-filter">
+    <button class="tag-btn active" data-tag-id="all">All</button>
+    {% for tag in tags %}
+      <button class="tag-btn" data-tag-id="{{ tag.id }}">{{ tag.name }}</button>
+    {% empty %}
+      <p class="muted" style="color: #818384;">No tags available</p>
+    {% endfor %}
   </div>
 
-  <main class="feed">
+  <main class="feed" id="post-feed">
     {% for post in items %}
-      <article class="post">
-
+      <article class="post" data-tags="{% for tag in post.tags.all %}{{ tag.id }},{% endfor %}">
+        
         <div class="post-header">
-          <a class="post-author"
-             href="{% url 'profile' post.author.username %}"
-             style="text-decoration: none; color: inherit;">
-            {{ post.author.username }}
-          </a>
+          <div class="post-header-main">
+            <h2 class="post-title">{{ post.title }}</h2>
+            <div class="post-author-info">
+              <a class="post-author"
+                 href="{% url 'profile' post.author.username %}"
+                 style="text-decoration: none; color: inherit;">
+                by {{ post.author.username }}
+              </a>
+              <span class="post-time">{{ post.created_at|timesince }} ago</span>
+            </div>
+          </div>
         </div>
 
         {# Make content clickable to open the post #}
@@ -38,12 +42,24 @@
 
           <div class="post-content">
             <div class="post-tags">
-              <span class="post-tag">Technology</span>
-              <span class="post-tag">Science</span>
+              {% for tag in post.tags.all %}
+                <span class="post-tag" data-tag-id="{{ tag.id }}">{{ tag.name }}</span>
+              {% empty %}
+                <span class="post-tag" style="opacity: 0.5;">No tags</span>
+              {% endfor %}
             </div>
 
-            <h2 class="post-title">{{ post.title }}</h2>
-            <p class="post-text">{{ post.body }}</p>
+            <p class="post-text">{{ post.body|truncatechars:200 }}</p>
+            
+            {% if post.first_comment_body %}
+              <div class="first-comment">
+                <div class="comment-header">
+                  <span class="comment-author">{{ post.first_comment_author }}</span>
+                  <span class="comment-time">{{ post.first_comment_time|timesince }} ago</span>
+                </div>
+                <p class="comment-text">{{ post.first_comment_body|truncatechars:150 }}</p>
+              </div>
+            {% endif %}
           </div>
         </a>
 
@@ -66,24 +82,82 @@
 
       </article>
     {% empty %}
-      <p class="muted">No posts yet.</p>
+      <p class="muted" style="color: #818384;">No posts yet. <a href="{% url 'add_post' %}" style="color: #7f22cc;">Create the first one!</a></p>
     {% endfor %}
   </main>
-
-  <div id="post-form" class="post-form" style="display: none;">
-    <div class="form-container">
-      <h3>Create a Post</h3>
-
-      <form method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        <input type="text" name="title" placeholder="Title">
-        <textarea name="body" placeholder="What's on your mind?"></textarea>
-
-        <button class="btn btn-primary" type="submit">Post</button>
-        <button type="button" onclick="showForm()">Cancel</button>
-      </form>
-    </div>
-  </div>
-
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const filterButtons = document.querySelectorAll('.tag-btn');
+  const posts = document.querySelectorAll('.post');
+  const feed = document.getElementById('post-feed');
+  
+  const allButton = document.querySelector('[data-tag-id="all"]');
+  
+  filterButtons.forEach(button => {
+    button.addEventListener('click', function() {
+      const tagId = this.getAttribute('data-tag-id');
+      
+      filterButtons.forEach(btn => btn.classList.remove('active'));
+      
+      this.classList.add('active');
+      
+      filterPosts(tagId);
+    });
+  });
+  
+  function filterPosts(tagId) {
+    if (tagId === 'all') {
+      posts.forEach(post => {
+        post.style.display = 'block';
+      });
+      return;
+    }
+    
+    posts.forEach(post => {
+      const postTags = post.getAttribute('data-tags');
+      
+      if (postTags && postTags.includes(tagId + ',')) {
+        post.style.display = 'block';
+      } else {
+        post.style.display = 'none';
+      }
+    });
+    
+    const visiblePosts = Array.from(posts).filter(post => post.style.display !== 'none');
+    
+    if (visiblePosts.length === 0) {
+      const noPostsMsg = document.getElementById('no-posts-message');
+      if (!noPostsMsg) {
+        const message = document.createElement('p');
+        message.id = 'no-posts-message';
+        message.className = 'muted';
+        message.style.color = '#818384';
+        message.style.textAlign = 'center';
+        message.style.padding = '40px';
+        message.textContent = `No posts found with this tag.`;
+        feed.appendChild(message);
+      }
+    } else {
+      const noPostsMsg = document.getElementById('no-posts-message');
+      if (noPostsMsg) {
+        noPostsMsg.remove();
+      }
+    }
+  }
+  
+  document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('post-tag')) {
+      const tagId = e.target.getAttribute('data-tag-id');
+      if (tagId) {
+        const filterButton = document.querySelector(`.tag-btn[data-tag-id="${tagId}"]`);
+        if (filterButton) {
+          filterButton.click();
+        }
+      }
+    }
+  });
+});
+</script>
 {% endblock %}

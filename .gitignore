@@ -13,3 +13,5 @@ media/
 staticfiles/
 
 .env
+
+*/migrations/*.py

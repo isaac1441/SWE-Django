@@ -1,5 +1,5 @@
 from django import forms
-from .models import Post, Comment
+from .models import Post, Comment, Tag
 from django.contrib.auth.models import User
 
 class SignUpForm(forms.Form):
@@ -34,10 +34,18 @@ class LogInForm(forms.Form):
     password = forms.CharField(max_length=128, widget=forms.PasswordInput)
 
 class PostForm(forms.ModelForm):
+    tags = forms.ModelMultipleChoiceField(
+        queryset=Tag.objects.all(),
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+    
     class Meta:
         model = Post
-
-        fields =['title', 'body']
+        fields = ['title', 'body', 'tags']
+        widgets = {
+            'tags': forms.CheckboxSelectMultiple(),
+        }
 
 class CommentForm(forms.ModelForm):
     class Meta:

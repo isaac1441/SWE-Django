@@ -6,7 +6,6 @@
 
 {% block content %}
 <div class="container">
-    <!-- Main Post -->
     <article class="post-detail">
         <div class="post-header">
             <div class="post-avatar"></div>
@@ -17,11 +16,13 @@
         </div>
         
         <div class="post-content">
-            <div class="post-tags">
-                <span class="post-tag">Technology</span>
-                <span class="post-tag">Science</span>
+              <div class="post-tags">
+              {% for tag in post.tags.all %}
+                <span class="post-tag" data-tag-id="{{ tag.id }}">{{ tag.name }}</span>
+              {% empty %}
+                <span class="post-tag" style="opacity: 0.5;">No tags</span>
+              {% endfor %}
             </div>
-            
             <h1 class="post-title">{{ post.title }}</h1>
             
             <div class="post-body">
@@ -41,11 +42,9 @@
         </div>
     </article>
 
-    <!-- Comments Section -->
     <section class="comments-section">
         <h2 class="comments-header">324 Comments</h2>
         
-        <!-- Comment Form -->
         {% if user.is_authenticated %}
             <form method="post">
             {% csrf_token %}
@@ -64,10 +63,8 @@
         </div>
         {% endif %}
 
-        <!-- Comments List -->
         <div class="comments-list">
             <h3>Comments ({{ comments|length }})</h3>
-            <!-- Comment 1 -->
             {% if comments %}
                {% for comment in comments %}
                     <div class="comment">

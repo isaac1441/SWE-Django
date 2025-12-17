@@ -4,18 +4,20 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 User = get_user_model()
-# Create your models here.
+class Tag(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.name
+
 class Post(models.Model):
-    # This links the post to an author.
-    # If an author is deleted, all their posts are also deleted.
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
     body = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
-
-
+    tags = models.ManyToManyField(Tag, related_name='posts', blank=True)
+    
     def __str__(self):
-        # This is what shows up in the Django admin panel
         return f'"{self.title}" by {self.author.username}'
 
 class Comment(models.Model):
@@ -73,3 +75,4 @@ class Profile(models.Model):
     @property
     def following_count(self):
         return self.following.count()
+   

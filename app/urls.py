@@ -21,9 +21,5 @@ urlpatterns = [
 
 
 
-    # 
-    # path("cart/", views.cart_view, name="cart"),
-    # path("product/<slug:product_slug>/",views.product_page, name="product_page"),
-    # path("product/<int:product_id>/",views.product_by_id, name="product_by_id"),
-
+    
 ]

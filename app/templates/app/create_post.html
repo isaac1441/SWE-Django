@@ -1,12 +1,61 @@
 {% extends 'app/base.html' %}
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="{% static 'app/css/create-post.css' %}">
+{% endblock %}
 
 {% block content %}
-<div class="container" style="max-width: 600px; margin-top: 20px;">
-    <h2>Create Post</h2>
-    <form method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Post</button>
-    </form>
+<h1 style="color:#ffffff">Create a post</h1>
+<div class="wrapper">
+    <div class="box">
+        <form method="post" action="{% url 'add_post' %}">
+            {% csrf_token %}
+            
+            <div class="input-group">
+                <label for="id_title">Title</label>
+                {{ form.title }}
+            </div>
+
+            <div class="input-group">
+                <label for="id_body">Body</label>
+                {{ form.body }}
+            </div>
+
+            <div class="input-group">
+                <label>Tags</label>
+                <div class="checkbox-tags-container">
+                    {{ form.tags }}
+                </div>
+                <div id="selected-counter" class="selected-tags-counter">
+                    No tags selected
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Post</button>
+        </form>
+    </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
+    const checkboxes = document.querySelectorAll('input[name="tags"]');
+    const counter = document.getElementById('selected-counter');
+    
+    form.addEventListener('change', function() {
+        const selected = Array.from(checkboxes).filter(cb => cb.checked).length;
+        
+        if (selected === 0) {
+            counter.textContent = 'No tags selected';
+            counter.classList.remove('has-selected');
+        } else {
+            counter.textContent = `${selected} tag${selected !== 1 ? 's' : ''} selected`;
+            counter.classList.add('has-selected');
+        }
+    });
+    
+    form.dispatchEvent(new Event('change'));
+});
+</script>
 {% endblock %}

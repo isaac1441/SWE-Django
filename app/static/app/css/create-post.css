@@ -1,0 +1,139 @@
+/* create-post.css */
+
+/* General Layout */
+.wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.box {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+    width: 100%;
+    max-width: 500px;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Input Groups */
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #333;
+    font-weight: bold;
+}
+
+.input-group input,
+.input-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.input-group input:focus,
+.input-group textarea:focus {
+    border-color: #7f22cc;
+    outline: none;
+}
+
+/* Checkbox Tags Container */
+#id_tags {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+#id_tags > div {
+    display: inline-block;
+    position: relative;
+}
+
+/* Hide the actual checkbox */
+#id_tags input[type="checkbox"] {
+    display: none;
+}
+
+/* Style the labels to look like buttons */
+#id_tags label {
+    display: inline-block;
+    padding: 5px 10px;
+    background-color: #f0f0f0;
+    color: #333;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    margin-bottom: 0;
+}
+
+#id_tags label:hover {
+    background-color: #e0e0e0;
+    transform: translateY(-1px);
+}
+
+/* Style for checked checkboxes - DARKENED */
+#id_tags input[type="checkbox"]:checked + label {
+    background-color: #5a1a99; /* Darker purple */
+    color: white;
+    border-color: #4a157a;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Fix for the label containing the checkbox */
+#id_tags label:has(input[type="checkbox"]:checked) {
+    background-color: #5a1a99;
+    color: white;
+    border-color: #4a157a;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Selected tags counter - always visible */
+.selected-tags-counter {
+    font-size: 14px;
+    color: #666;
+    margin-top: 10px;
+    min-height: 20px;
+}
+
+.selected-tags-counter.has-selected {
+    color: #5a1a99;
+    font-weight: bold;
+}
+
+/* Submit Button */
+.btn-primary {
+    width: 100%;
+    padding: 12px;
+    background-color: #7f22cc;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #5a1a99;
+}

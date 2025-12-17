@@ -1,12 +1,27 @@
 {% extends 'app/base.html' %}
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="{% static 'app/css/form.css' %}">
+{% endblock %}
 
 {% block content %}
-    <h1>Log in</h1>
-    <div class="sign-up-box">
-        <form method="post" action="{% url 'login' %}">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Log In</button>
-        </form>
+    <h1 style="color:#ffffff">Log In</h1>
+    <div class="wrapper">
+        <div class="box">
+            <form method="post" action="{% url 'login' %}">
+                {% csrf_token %}
+                <div class="input-group">
+                    <label for="id_username">Username or Email</label>
+                    {{ form.identifier }}
+                </div>
+                <div class="input-group">
+                    <label for="id_password">Password</label>
+                    {{ form.password }}
+                </div>
+                <button type="submit" class="btn btn-primary">Log In</button>
+            </form>
+            <p style="margin-top:2vh;color:#6c17b3">Don't have an account? <a class="btn btn-primary" style="margin-left:1vw" href="{% url 'signup' %}">Sign Up</a></p>
+        </div>
     </div>
 {% endblock %}

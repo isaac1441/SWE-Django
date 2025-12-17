@@ -37,6 +37,13 @@
   </div>
 {% elif is_own_profile %}
   <p class="text-muted mt-2">This is your profile.</p>
+  <form action="{% url 'logout' %}" method="post" style="margin: 0;">
+
+                {% csrf_token %}
+
+                <button class="btn " type="submit">Logout</button>
+
+            </form>
 {% endif %}
 
 </div>
